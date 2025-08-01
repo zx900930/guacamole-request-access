@@ -1,0 +1,23 @@
+{
+    "guacamoleVersion" : "1.5.3",
+
+    "name"      : "Request Access",
+    "namespace" : "request-access",
+
+    "authProviders" : [
+        "org.apache.guacamole.requestaccess.RequestAccessAuthenticationProvider"
+    ],
+
+    "js" : [
+        "app.js"
+    ],
+
+    "css" : [
+        "app.css"
+    ],
+
+    "translations" : [
+        "translations/en.json"
+    ]
+
+}

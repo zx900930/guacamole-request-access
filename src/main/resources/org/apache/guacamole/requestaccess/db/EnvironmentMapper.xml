@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.apache.guacamole.requestaccess.db.EnvironmentMapper">
+
+    <select id="selectAll" resultType="org.apache.guacamole.requestaccess.model.Environment">
+        SELECT
+            environment_id   AS environmentId,
+            environment_name AS environmentName
+        FROM
+            guacamole_request_environment
+        ORDER BY
+            environment_name
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="environmentId">
+        INSERT INTO guacamole_request_environment (environment_name)
+        VALUES (#{environmentName})
+    </insert>
+
+    <update id="update">
+        UPDATE
+            guacamole_request_environment
+        SET
+            environment_name = #{environmentName}
+        WHERE
+            environment_id = #{environmentId}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM
+            guacamole_request_environment
+        WHERE
+            environment_id = #{environmentId}
+    </delete>
+
+</mapper>

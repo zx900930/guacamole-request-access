@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.apache.guacamole.requestaccess.db.RequestMapper">
+
+    <resultMap id="RequestResultMap" type="org.apache.guacamole.requestaccess.model.Request">
+        <id property="requestId" column="request_id"/>
+        <result property="environmentId" column="environment_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="reason" column="reason"/>
+        <result property="estimatedTime" column="estimated_time"/>
+        <result property="submissionTime" column="submission_time"/>
+        <result property="requestStatus" column="request_status"/>
+        <association property="user" javaType="org.apache.guacamole.net.auth.User">
+            <id property="identifier" column="username"/>
+        </association>
+        <association property="environment" javaType="org.apache.guacamole.requestaccess.model.Environment">
+            <id property="environmentId" column="environment_id"/>
+            <result property="environmentName" column="environment_name"/>
+        </association>
+    </resultMap>
+
+    <select id="selectAll" resultMap="RequestResultMap">
+        SELECT
+            guacamole_request.request_id,
+            guacamole_request.environment_id,
+            guacamole_request.user_id,
+            guacamole_request.reason,
+            guacamole_request.estimated_time,
+            guacamole_request.submission_time,
+            guacamole_request.request_status,
+            guacamole_user.username,
+            guacamole_request_environment.environment_name
+        FROM
+            guacamole_request
+        JOIN
+            guacamole_user ON guacamole_request.user_id = guacamole_user.user_id
+        JOIN
+            guacamole_request_environment ON guacamole_request.environment_id = guacamole_request_environment.environment_id
+        ORDER BY
+            guacamole_request.submission_time DESC
+    </select>
+
+    <update id="updateStatus">
+        UPDATE
+            guacamole_request
+        SET
+            request_status = #{status}
+        WHERE
+            request_id = #{requestId}
+    </update>
+
+</mapper>
