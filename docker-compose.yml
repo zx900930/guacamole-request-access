@@ -16,7 +16,7 @@ services:
       POSTGRES_PASSWORD: some_password
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./schema-postgres.sql:/docker-entrypoint-initdb.d/schema-postgres.sql
+      
     networks:
       - guac-net
 
@@ -30,7 +30,7 @@ services:
       MYSQL_ROOT_PASSWORD: some_password
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./schema-mysql.sql:/docker-entrypoint-initdb.d/schema-mysql.sql
+      
     networks:
       - guac-net
 
@@ -54,12 +54,14 @@ services:
       # Mount the extensions directory
       EXTENSIONS_DIR: /opt/guacamole/extensions
     volumes:
-      - ./target:/opt/guacamole/extensions # Mount the Maven target directory as extensions
+      - ./guac-request-portal/target:/opt/guacamole/extensions # Mount the Maven target directory as extensions
       - ./guacamole-home:/etc/guacamole # For guacamole.properties and other configs
     ports:
       - "8080:8080"
     networks:
       - guac-net
+
+  
 
 networks:
   guac-net:
