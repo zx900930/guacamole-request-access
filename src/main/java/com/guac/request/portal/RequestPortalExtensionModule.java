@@ -2,8 +2,6 @@ package com.guac.request.portal;
 
 import com.google.inject.AbstractModule;
 import com.guac.request.portal.rest.RequestPortalRESTResource;
-import org.apache.guacamole.jersey.JerseyModule;
-
 public class RequestPortalExtensionModule extends AbstractModule {
 
     private final RequestPortalExtension extension;
@@ -14,11 +12,6 @@ public class RequestPortalExtensionModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        install(new JerseyModule() {
-            @Override
-            protected void configure() {
-                bind(RequestPortalRESTResource.class);
-            }
-        });
+        bind(RequestPortalRESTResource.class);
     }
 }

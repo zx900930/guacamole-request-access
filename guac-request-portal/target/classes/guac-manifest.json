@@ -7,5 +7,19 @@
             "name": "RequestPortalAuthenticationProvider",
             "className": "com.zx900930.guacamole.requestportal.RequestPortalAuthenticationProvider"
         }
+    ],
+    "resources": [
+        {
+            "type": "text/html",
+            "path": "html/index.html"
+        },
+        {
+            "type": "text/css",
+            "path": "css/request-portal.css"
+        },
+        {
+            "type": "text/javascript",
+            "path": "js/request-portal.js"
+        }
     ]
 }

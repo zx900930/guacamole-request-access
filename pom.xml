@@ -18,12 +18,12 @@
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
     <dependencies>
-    <!-- Guacamole Extension API (provided by Guacamole at runtime) -->
+    <!-- Guacamole Extension API -->
     <dependency>
         <groupId>org.apache.guacamole</groupId>
         <artifactId>guacamole-ext</artifactId>
         <version>${guacamole.version}</version>
-        <scope>provided</scope>
+        <scope>compile</scope>
     </dependency>
     
     <!-- Guacamole Common API (provided by Guacamole at runtime) -->
@@ -31,6 +31,14 @@
         <groupId>org.apache.guacamole</groupId>
         <artifactId>guacamole-common</artifactId>
         <version>${guacamole.version}</version>
+        <scope>provided</scope>
+    </dependency>
+    
+    <!-- Java servlet API (provided by Guacamole at runtime) -->
+    <dependency>
+        <groupId>javax.servlet</groupId>
+        <artifactId>servlet-api</artifactId>
+        <version>2.5</version>
         <scope>provided</scope>
     </dependency>
     
@@ -44,15 +52,9 @@
     
     <!-- JAX-RS (provided by Guacamole at runtime) -->
     <dependency>
-        <groupId>org.glassfish.jersey.containers</groupId>
-        <artifactId>jersey-container-servlet-core</artifactId>
-        <version>2.46</version>
-        <scope>provided</scope>
-    </dependency>
-    <dependency>
-        <groupId>org.glassfish.jersey.inject</groupId>
-        <artifactId>jersey-hk2</artifactId>
-        <version>2.46</version>
+        <groupId>javax.ws.rs</groupId>
+        <artifactId>jsr311-api</artifactId>
+        <version>1.1.1</version>
         <scope>provided</scope>
     </dependency>
     
@@ -96,14 +98,7 @@
         <scope>provided</scope>
     </dependency>
     
-    <!-- Java servlet API (provided by Guacamole at runtime) -->
-    <dependency>
-        <groupId>javax.servlet</groupId>
-        <artifactId>servlet-api</artifactId>
-        <version>2.5</version>
-        <scope>provided</scope>
-    </dependency>
-</dependencies>
+    </dependencies>
     <build>
         <plugins>
             <plugin>
