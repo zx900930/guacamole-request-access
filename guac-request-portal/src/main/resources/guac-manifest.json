@@ -1,0 +1,11 @@
+{
+    "guacamoleVersion": "1.6.0",
+    "name": "Guacamole Request Portal",
+    "namespace": "guac-request-portal",
+    "authProviders": [
+        {
+            "name": "RequestPortalAuthenticationProvider",
+            "className": "com.zx900930.guacamole.requestportal.RequestPortalAuthenticationProvider"
+        }
+    ]
+}
