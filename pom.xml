@@ -3,11 +3,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>org.apache.guacamole</groupId>
-        <artifactId>guacamole-client</artifactId>
-        <version>1.6.0</version>
-    </parent>
+
     <groupId>com.guac.request.portal</groupId>
     <artifactId>guac-request-portal</artifactId>
     <version>1.0.0</version>
@@ -20,89 +16,94 @@
         <guacamole.version>1.6.0</guacamole.version>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <jaxrs.version>2.1.1</jaxrs.version>
-        <jackson.version>2.19.0</jackson.version>
-        <slf4j.version>2.0.17</slf4j.version>
     </properties>
     <dependencies>
-        <!-- Guacamole Extension API (provided by Guacamole at runtime) -->
-        <dependency>
-            <groupId>org.apache.guacamole</groupId>
-            <artifactId>guacamole-ext</artifactId>
-            <version>${guacamole.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <!-- Guacamole Common API (provided by Guacamole at runtime) -->
-        <dependency>
-            <groupId>org.apache.guacamole</groupId>
-            <artifactId>guacamole-common</artifactId>
-            <version>${guacamole.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <!-- Guice (provided by Guacamole at runtime) -->
-        <dependency>
-            <groupId>com.google.inject</groupId>
-            <artifactId>guice</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        
-        <!-- JAX-RS (provided by Guacamole at runtime) -->
-        <dependency>
-            <groupId>org.glassfish.jersey.containers</groupId>
-            <artifactId>jersey-container-servlet-core</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        
-        <!-- MySQL and PostgreSQL JDBC Drivers (must be bundled with the extension) -->
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.28</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>42.2.24</version>
-            <scope>runtime</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.checkerframework</groupId>
-                    <artifactId>checker-qual</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        
-        <!-- Apache POI for Excel file generation -->
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi</artifactId>
-            <version>5.2.5</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi-ooxml</artifactId>
-            <version>5.2.5</version>
-        </dependency>
-        
-        <!-- Explicitly define checker-qual to resolve dependency convergence -->
-        <dependency>
-            <groupId>org.checkerframework</groupId>
-            <artifactId>checker-qual</artifactId>
-            <version>3.37.0</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <!-- Java servlet API (provided by Guacamole at runtime) -->
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version>2.5</version>
-            <scope>provided</scope>
-        </dependency>
-    </dependencies>
+    <!-- Guacamole Extension API (provided by Guacamole at runtime) -->
+    <dependency>
+        <groupId>org.apache.guacamole</groupId>
+        <artifactId>guacamole-ext</artifactId>
+        <version>${guacamole.version}</version>
+        <scope>provided</scope>
+    </dependency>
+    
+    <!-- Guacamole Common API (provided by Guacamole at runtime) -->
+    <dependency>
+        <groupId>org.apache.guacamole</groupId>
+        <artifactId>guacamole-common</artifactId>
+        <version>${guacamole.version}</version>
+        <scope>provided</scope>
+    </dependency>
+    
+    <!-- Guice (provided by Guacamole at runtime) -->
+    <dependency>
+        <groupId>com.google.inject</groupId>
+        <artifactId>guice</artifactId>
+        <version>4.1.0</version>
+        <scope>provided</scope>
+    </dependency>
+    
+    <!-- JAX-RS (provided by Guacamole at runtime) -->
+    <dependency>
+        <groupId>org.glassfish.jersey.containers</groupId>
+        <artifactId>jersey-container-servlet-core</artifactId>
+        <version>2.46</version>
+        <scope>provided</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.glassfish.jersey.inject</groupId>
+        <artifactId>jersey-hk2</artifactId>
+        <version>2.46</version>
+        <scope>provided</scope>
+    </dependency>
+    
+    <!-- MySQL and PostgreSQL JDBC Drivers (must be bundled with the extension) -->
+    <dependency>
+        <groupId>mysql</groupId>
+        <artifactId>mysql-connector-java</artifactId>
+        <version>8.0.28</version>
+        <scope>runtime</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.postgresql</groupId>
+        <artifactId>postgresql</artifactId>
+        <version>42.2.24</version>
+        <scope>runtime</scope>
+        <exclusions>
+            <exclusion>
+                <groupId>org.checkerframework</groupId>
+                <artifactId>checker-qual</artifactId>
+            </exclusion>
+        </exclusions>
+    </dependency>
+    
+    <!-- Apache POI for Excel file generation -->
+    <dependency>
+        <groupId>org.apache.poi</groupId>
+        <artifactId>poi</artifactId>
+        <version>5.2.5</version>
+    </dependency>
+    <dependency>
+        <groupId>org.apache.poi</groupId>
+        <artifactId>poi-ooxml</artifactId>
+        <version>5.2.5</version>
+    </dependency>
+    
+    <!-- Explicitly define checker-qual to resolve dependency convergence -->
+    <dependency>
+        <groupId>org.checkerframework</groupId>
+        <artifactId>checker-qual</artifactId>
+        <version>3.37.0</version>
+        <scope>provided</scope>
+    </dependency>
+    
+    <!-- Java servlet API (provided by Guacamole at runtime) -->
+    <dependency>
+        <groupId>javax.servlet</groupId>
+        <artifactId>servlet-api</artifactId>
+        <version>2.5</version>
+        <scope>provided</scope>
+    </dependency>
+</dependencies>
     <build>
         <plugins>
             <plugin>
