@@ -3,6 +3,7 @@
 /home/xavier/dev/guacamole-request-access/src/main/java/com/guac/request/portal/model/TargetEnvironment.java
 /home/xavier/dev/guacamole-request-access/src/main/java/com/guac/request/portal/dao/RequestDAOMySQL.java
 /home/xavier/dev/guacamole-request-access/src/main/java/com/guac/request/portal/rest/RequestPortalRESTResource.java
+/home/xavier/dev/guacamole-request-access/src/main/java/com/guac/request/portal/RequestPortalExtensionModule.java
 /home/xavier/dev/guacamole-request-access/src/main/java/com/guac/request/portal/rest/AccessRequestResource.java
 /home/xavier/dev/guacamole-request-access/src/main/java/com/guac/request/portal/RequestPortalExtension.java
 /home/xavier/dev/guacamole-request-access/src/main/java/com/guac/request/portal/dao/RequestDAO.java

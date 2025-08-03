@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   guacd:
-    image: guacamole/guacd:1.5.3
+    image: guacamole/guacd:1.6.0
     restart: always
     networks:
       - guac-net
@@ -35,7 +35,7 @@ services:
       - guac-net
 
   guacamole:
-    image: guacamole/guacamole:1.5.3
+    image: guacamole/guacamole:1.6.0
     restart: always
     links:
       - guacd
