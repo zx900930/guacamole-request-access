@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.apache.guacamole.request.access.service.mapper.ApprovalHistoryMapper">
+
+    <!-- Result mapping for ApprovalHistory -->
+    <resultMap id="ApprovalHistoryResult" type="org.apache.guacamole.request.access.model.ApprovalHistory">
+        <id property="historyId" column="history_id"/>
+        <result property="requestId" column="request_id"/>
+        <result property="action" column="action"/>
+        <result property="performedBy" column="performed_by"/>
+        <result property="performedAt" column="performed_at"/>
+        <result property="comments" column="comments"/>
+    </resultMap>
+
+    <!-- Create a new approval history entry -->
+    <insert id="createHistory" parameterType="org.apache.guacamole.request.access.model.ApprovalHistory"
+            useGeneratedKeys="true" keyProperty="historyId">
+        INSERT INTO request_access_approval_history (
+            request_id, action, performed_by, performed_at, comments
+        ) VALUES (
+            #{requestId}, #{action}, #{performedBy}, #{performedAt}, #{comments}
+        )
+    </insert>
+
+    <!-- Retrieve approval history for a specific request -->
+    <select id="getHistoryByRequest" resultMap="ApprovalHistoryResult">
+        SELECT * FROM request_access_approval_history 
+        WHERE request_id = #{requestId}
+        ORDER BY performed_at DESC
+    </select>
+
+    <!-- Retrieve all approval history with optional filtering -->
+    <select id="getAllHistory" resultMap="ApprovalHistoryResult">
+        SELECT * FROM request_access_approval_history 
+        <where>
+            <if test="action != null">
+                AND action = #{action}
+            </if>
+            <if test="requestId != null">
+                AND request_id = #{requestId}
+            </if>
+        </where>
+        ORDER BY performed_at DESC
+    </select>
+
+    <!-- Delete approval history for a request -->
+    <delete id="deleteHistoryByRequest">
+        DELETE FROM request_access_approval_history 
+        WHERE request_id = #{requestId}
+    </delete>
+
+</mapper>

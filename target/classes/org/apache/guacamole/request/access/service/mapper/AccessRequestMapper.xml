@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.apache.guacamole.request.access.service.mapper.AccessRequestMapper">
+
+    <!-- Result mapping for AccessRequest -->
+    <resultMap id="accessRequestResultMap" type="org.apache.guacamole.request.access.model.AccessRequest">
+        <id property="requestId" column="request_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="username" column="username"/>
+        <result property="connectionId" column="connection_id"/>
+        <result property="connectionName" column="connection_name"/>
+        <result property="reason" column="reason"/>
+        <result property="startTime" column="start_time"/>
+        <result property="endTime" column="end_time"/>
+        <result property="status" column="status"/>
+        <result property="submittedAt" column="submitted_at"/>
+        <result property="updatedAt" column="updated_at"/>
+        <result property="approvedBy" column="approved_by"/>
+        <result property="approvedAt" column="approved_at"/>
+        <result property="rejectionReason" column="rejection_reason"/>
+    </resultMap>
+
+    <!-- Create a new access request -->
+    <insert id="createRequest" parameterType="org.apache.guacamole.request.access.model.AccessRequest" 
+            useGeneratedKeys="true" keyProperty="requestId">
+        INSERT INTO request_access_requests (
+            user_id, username, connection_id, connection_name, reason, 
+            start_time, end_time, status, submitted_at
+        ) VALUES (
+            #{userId}, #{username}, #{connectionId}, #{connectionName}, #{reason},
+            #{startTime}, #{endTime}, #{status}, #{submittedAt}
+        )
+    </insert>
+
+    <!-- Get access request by ID -->
+    <select id="getRequestById" resultMap="accessRequestResultMap">
+        SELECT * FROM request_access_requests 
+        WHERE request_id = #{requestId}
+    </select>
+
+    <!-- Get requests by user -->
+    <select id="getRequestsByUser" resultMap="accessRequestResultMap">
+        SELECT * FROM request_access_requests 
+        WHERE user_id = #{userId}
+        ORDER BY submitted_at DESC
+    </select>
+
+    <!-- Get all requests with optional filtering -->
+    <select id="getAllRequests" resultMap="accessRequestResultMap">
+        SELECT * FROM request_access_requests 
+        <where>
+            <if test="status != null and status != ''">
+                AND status = #{status}
+            </if>
+            <if test="connectionId != null and connectionId != ''">
+                AND connection_id = #{connectionId}
+            </if>
+        </where>
+        ORDER BY submitted_at DESC
+    </select>
+
+    <!-- Get pending requests -->
+    <select id="getPendingRequests" resultMap="accessRequestResultMap">
+        SELECT * FROM request_access_requests 
+        WHERE status = 'PENDING'
+        ORDER BY submitted_at ASC
+    </select>
+
+    <!-- Get requests by connection and time range -->
+    <select id="getRequestsByConnectionAndTimeRange" resultMap="accessRequestResultMap">
+        SELECT * FROM request_access_requests 
+        WHERE connection_id = #{connectionId}
+        AND status IN ('PENDING', 'APPROVED')
+        AND (
+            (start_time <= #{startTime} AND end_time >= #{startTime}) OR
+            (start_time <= #{endTime} AND end_time >= #{endTime}) OR
+            (start_time >= #{startTime} AND end_time <= #{endTime})
+        )
+    </select>
+
+    <!-- Update access request -->
+    <update id="updateRequest" parameterType="org.apache.guacamole.request.access.model.AccessRequest">
+        UPDATE request_access_requests
+        SET 
+            user_id = #{userId},
+            username = #{username},
+            connection_id = #{connectionId},
+            connection_name = #{connectionName},
+            reason = #{reason},
+            start_time = #{startTime},
+            end_time = #{endTime},
+            status = #{status},
+            updated_at = CURRENT_TIMESTAMP,
+            approved_by = #{approvedBy},
+            approved_at = #{approvedAt},
+            rejection_reason = #{rejectionReason}
+        WHERE request_id = #{requestId}
+    </update>
+
+    <!-- Delete access request -->
+    <delete id="deleteRequest">
+        DELETE FROM request_access_requests 
+        WHERE request_id = #{requestId}
+    </delete>
+
+</mapper>

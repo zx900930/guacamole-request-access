@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.apache.guacamole.request.access.service.mapper.ApprovalHistoryMapper">
+
+    <!-- Result mapping for ApprovalHistory -->
+    <resultMap id="approvalHistoryResultMap" type="org.apache.guacamole.request.access.model.ApprovalHistory">
+        <id property="historyId" column="history_id"/>
+        <result property="requestId" column="request_id"/>
+        <result property="action" column="action"/>
+        <result property="performedBy" column="performed_by"/>
+        <result property="performedAt" column="performed_at"/>
+        <result property="comments" column="comments"/>
+    </resultMap>
+
+    <!-- Create a new approval history entry -->
+    <insert id="createHistoryEntry" parameterType="org.apache.guacamole.request.access.model.ApprovalHistory" 
+            useGeneratedKeys="true" keyProperty="historyId">
+        INSERT INTO request_access_approval_history (
+            request_id, action, performed_by, performed_at, comments
+        ) VALUES (
+            #{requestId}, #{action}, #{performedBy}, #{performedAt}, #{comments}
+        )
+    </insert>
+
+    <!-- Get approval history by request ID -->
+    <select id="getHistoryByRequest" resultMap="approvalHistoryResultMap">
+        SELECT * FROM request_access_approval_history 
+        WHERE request_id = #{requestId}
+        ORDER BY performed_at DESC
+    </select>
+
+    <!-- Get all approval history with optional filtering -->
+    <select id="getAllHistory" resultMap="approvalHistoryResultMap">
+        SELECT * FROM request_access_approval_history 
+        <where>
+            <if test="action != null and action != ''">
+                AND action = #{action}
+            </if>
+            <if test="performedBy != null and performedBy != ''">
+                AND performed_by = #{performedBy}
+            </if>
+        </where>
+        ORDER BY performed_at DESC
+    </select>
+
+    <!-- Delete approval history by request ID -->
+    <delete id="deleteHistoryByRequest">
+        DELETE FROM request_access_approval_history 
+        WHERE request_id = #{requestId}
+    </delete>
+
+</mapper>

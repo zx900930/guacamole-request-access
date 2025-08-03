@@ -1,0 +1,45 @@
+{
+    "REQUEST_ACCESS": {
+        "TITLE": "Request Access",
+        "SUBMIT_REQUEST": "Submit Request",
+        "MY_REQUESTS": "My Requests",
+        "ADMIN_PANEL": "Admin Panel",
+        "REQUEST_FORM": {
+            "CONNECTION_TYPE": "Connection Type",
+            "REASON": "Reason for Access",
+            "START_TIME": "Start Time",
+            "END_TIME": "End Time",
+            "SUBMIT": "Submit Request"
+        },
+        "REQUEST_LIST": {
+            "ID": "ID",
+            "USER": "User",
+            "CONNECTION": "Connection",
+            "STATUS": "Status",
+            "SUBMITTED": "Submitted",
+            "START_TIME": "Start Time",
+            "END_TIME": "End Time",
+            "ACTIONS": "Actions",
+            "APPROVE": "Approve",
+            "REJECT": "Reject",
+            "RESERVE": "Reserve",
+            "CANCEL": "Cancel"
+        },
+        "STATUS": {
+            "PENDING": "Pending",
+            "APPROVED": "Approved",
+            "REJECTED": "Rejected",
+            "RESERVED": "Reserved",
+            "CANCELLED": "Cancelled"
+        },
+        "MESSAGES": {
+            "REQUEST_SUBMITTED": "Request submitted successfully",
+            "REQUEST_APPROVED": "Request approved",
+            "REQUEST_REJECTED": "Request rejected",
+            "REQUEST_CANCELLED": "Request cancelled",
+            "RESERVATION_CREATED": "Reservation created successfully",
+            "ERROR_SUBMITTING": "Error submitting request",
+            "ERROR_UPDATING": "Error updating request"
+        }
+    }
+}

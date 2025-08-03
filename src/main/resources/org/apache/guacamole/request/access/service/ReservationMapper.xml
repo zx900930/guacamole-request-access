@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Licensed to the Apache Software Foundation (ASF) under one
+    or more contributor license agreements.  See the NOTICE file
+    distributed with this work for additional information
+    regarding copyright ownership.  The ASF licenses this file
+    to you under the Apache License, Version 2.0 (the
+    "License"); you may not use this file except in compliance
+    with the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing,
+    software distributed under the License is distributed on an
+    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+    KIND, either express or implied.  See the License for the
+    specific language governing permissions and limitations
+    under the License.
+-->
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.apache.guacamole.request.access.service.mapper.ReservationMapper">
+
+    <!-- Result mapping for Reservation -->
+    <resultMap id="ReservationResult" type="org.apache.guacamole.request.access.model.Reservation">
+        <id property="reservationId" column="reservation_id"/>
+        <result property="requestId" column="request_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="username" column="username"/>
+        <result property="connectionId" column="connection_id"/>
+        <result property="connectionName" column="connection_name"/>
+        <result property="startTime" column="start_time"/>
+        <result property="endTime" column="end_time"/>
+        <result property="status" column="status"/>
+        <result property="reservedAt" column="reserved_at"/>
+        <result property="reservedBy" column="reserved_by"/>
+    </resultMap>
+
+    <!-- Create a new reservation -->
+    <insert id="createReservation" parameterType="org.apache.guacamole.request.access.model.Reservation"
+            useGeneratedKeys="true" keyProperty="reservationId">
+        INSERT INTO request_access_reservations (
+            request_id, user_id, username, connection_id, connection_name, 
+            start_time, end_time, status, reserved_at, reserved_by
+        ) VALUES (
+            #{requestId}, #{userId}, #{username}, #{connectionId}, #{connectionName},
+            #{startTime}, #{endTime}, #{status}, #{reservedAt}, #{reservedBy}
+        )
+    </insert>
+
+    <!-- Retrieve a reservation by ID -->
+    <select id="getReservationById" resultMap="ReservationResult">
+        SELECT * FROM request_access_reservations 
+        WHERE reservation_id = #{reservationId}
+    </select>
+
+    <!-- Retrieve all reservations for a specific user -->
+    <select id="getReservationsByUser" resultMap="ReservationResult">
+        SELECT * FROM request_access_reservations 
+        WHERE user_id = #{userId}
+        ORDER BY reserved_at DESC
+    </select>
+
+    <!-- Retrieve all reservations for a specific request -->
+    <select id="getReservationsByRequest" resultMap="ReservationResult">
+        SELECT * FROM request_access_reservations 
+        WHERE request_id = #{requestId}
+        ORDER BY reserved_at DESC
+    </select>
+
+    <!-- Retrieve all reservations with optional filtering -->
+    <select id="getAllReservations" resultMap="ReservationResult">
+        SELECT * FROM request_access_reservations 
+        <where>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+            <if test="connectionId != null">
+                AND connection_id = #{connectionId}
+            </if>
+        </where>
+        ORDER BY reserved_at DESC
+    </select>
+
+    <!-- Update a reservation -->
+    <update id="updateReservation" parameterType="org.apache.guacamole.request.access.model.Reservation">
+        UPDATE request_access_reservations
+        SET 
+            request_id = #{requestId},
+            user_id = #{userId},
+            username = #{username},
+            connection_id = #{connectionId},
+            connection_name = #{connectionName},
+            start_time = #{startTime},
+            end_time = #{endTime},
+            status = #{status},
+            reserved_by = #{reservedBy}
+        WHERE reservation_id = #{reservationId}
+    </update>
+
+    <!-- Delete a reservation -->
+    <delete id="deleteReservation">
+        DELETE FROM request_access_reservations 
+        WHERE reservation_id = #{reservationId}
+    </delete>
+
+    <!-- Get active reservations for a specific connection -->
+    <select id="getActiveReservationsByConnection" resultMap="ReservationResult">
+        SELECT * FROM request_access_reservations 
+        WHERE connection_id = #{connectionId}
+        AND status = 'ACTIVE'
+        AND end_time > CURRENT_TIMESTAMP
+        ORDER BY start_time ASC
+    </select>
+
+    <!-- Get reservations that overlap with a given time range for a connection -->
+    <select id="getOverlappingReservations" resultMap="ReservationResult">
+        SELECT * FROM request_access_reservations 
+        WHERE connection_id = #{connectionId}
+        AND status = 'ACTIVE'
+        AND (
+            (start_time <= #{startTime} AND end_time >= #{startTime}) OR
+            (start_time <= #{endTime} AND end_time >= #{endTime}) OR
+            (start_time >= #{startTime} AND end_time <= #{endTime})
+        )
+        ORDER BY start_time ASC
+    </select>
+
+    <!-- Expire reservations that have ended -->
+    <update id="expireReservations">
+        UPDATE request_access_reservations
+        SET status = 'EXPIRED'
+        WHERE status = 'ACTIVE'
+        AND end_time < CURRENT_TIMESTAMP
+    </update>
+
+</mapper>

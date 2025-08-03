@@ -1,0 +1,14 @@
+org/apache/guacamole/request/access/listener/RequestAccessListener.class
+org/apache/guacamole/request/access/service/mapper/ReservationMapper.class
+org/apache/guacamole/request/access/rest/RequestAccessREST.class
+org/apache/guacamole/request/access/injector/RequestAccessInjector$SqlSessionFactoryProvider.class
+org/apache/guacamole/request/access/service/mapper/AccessRequestMapper.class
+org/apache/guacamole/request/access/injector/RequestAccessInjector$RequestAccessModule.class
+org/apache/guacamole/request/access/model/ApprovalHistory.class
+org/apache/guacamole/request/access/model/Reservation.class
+org/apache/guacamole/request/access/service/ReservationService.class
+org/apache/guacamole/request/access/model/AccessRequest.class
+org/apache/guacamole/request/access/RequestAccessAuthenticationProvider.class
+org/apache/guacamole/request/access/service/mapper/ApprovalHistoryMapper.class
+org/apache/guacamole/request/access/injector/RequestAccessInjector.class
+org/apache/guacamole/request/access/service/AccessRequestService.class

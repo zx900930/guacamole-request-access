@@ -1,0 +1,22 @@
+{
+    "guacamoleVersion": "1.6.0",
+    "name": "Request Access Extension",
+    "namespace": "guac-request-access",
+    "authProviders": [
+        "org.apache.guacamole.request.access.RequestAccessAuthenticationProvider"
+    ],
+    "listeners": [
+        "org.apache.guacamole.request.access.RequestAccessListener"
+    ],
+    "resources": {
+        "styles": [
+            "styles/request-access.css"
+        ],
+        "scripts": [
+            "scripts/request-access.js"
+        ],
+        "translations": [
+            "translations/en.json"
+        ]
+    }
+}

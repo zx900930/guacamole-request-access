@@ -1,0 +1,72 @@
+/* Request Access Extension Styles */
+
+.request-access-container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.request-access-header {
+    background: #f5f5f5;
+    padding: 15px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+.request-access-form {
+    background: white;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+.request-access-list {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.request-access-item {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.request-access-item:last-child {
+    border-bottom: none;
+}
+
+.request-access-status {
+    padding: 4px 8px;
+    border-radius: 3px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.status-pending {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.status-approved {
+    background: #d4edda;
+    color: #155724;
+}
+
+.status-rejected {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.status-reserved {
+    background: #cce5ff;
+    color: #004085;
+}
+
+.request-access-actions {
+    margin-top: 10px;
+}
+
+.request-access-actions button {
+    margin-right: 5px;
+}
