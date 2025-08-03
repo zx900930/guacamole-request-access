@@ -1,0 +1,111 @@
+<!-- src/main/resources/html/request.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title data-i18n="request.title">Request Access</title>
+    <link rel="stylesheet" type="text/css" href="app/dist/guacamole.css">
+    <script type="text/javascript" src="app/dist/guacamole-common-js/modules/guacamole-common.js"></script>
+</head>
+<body class="guac-body">
+    <div class="login-dialog">
+        <h1 id="request-heading" data-i18n="request.heading">Request Access</h1>
+        <form id="request-form">
+            <div class="form-group">
+                <label for="target-environment" id="target-env-label" data-i18n="request.targetEnvironment">Target Environment</label>
+                <select id="target-environment" class="form-control">
+                    <!-- Options will be dynamically loaded -->
+                    <option value="" data-i18n="request.selectEnvironment">-- Select Environment --</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="reason" id="reason-label" data-i18n="request.reason">Reason for Request</label>
+                <textarea id="reason" class="form-control" rows="3"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="estimated-time" id="estimated-time-label" data-i18n="request.estimatedTime">Estimated Time (Hours)</label>
+                <input type="number" id="estimated-time" class="form-control" min="1" value="1">
+            </div>
+            <button type="submit" id="submit-button" class="button" data-i18n="request.submit">Submit Request</button>
+        </form>
+        <div id="request-status" class="status-message" style="display: none;"></div>
+    </div>
+
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', function() {
+            // Normally, translations are handled by Guacamole's framework.
+            // For this static page, we'll just use the data-i18n attributes as placeholders.
+
+            const token = Guacamole.Authentication.getToken();
+            const environmentSelect = document.getElementById('target-environment');
+            const requestForm = document.getElementById('request-form');
+            const statusDiv = document.getElementById('request-status');
+
+            // Fetch target environments
+            fetch(`api/ext/request-portal/environments?token=${token}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to load environments.');
+                    }
+                    return response.json();
+                })
+                .then(environments => {
+                    environments.forEach(env => {
+                        const option = document.createElement('option');
+                        option.value = env.name;
+                        option.textContent = `${env.name} - ${env.description}`;
+                        environmentSelect.appendChild(option);
+                    });
+                })
+                .catch(error => {
+                    statusDiv.textContent = error.message;
+                    statusDiv.className = 'status-message error';
+                    statusDiv.style.display = 'block';
+                });
+
+            // Handle form submission
+            requestForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                statusDiv.style.display = 'none';
+
+                const request = {
+                    targetEnvironment: document.getElementById('target-environment').value,
+                    reasonForRequest: document.getElementById('reason').value,
+                    estimatedTime: parseInt(document.getElementById('estimated-time').value, 10)
+                };
+
+                if (!request.targetEnvironment) {
+                    statusDiv.textContent = 'Please select a target environment.';
+                    statusDiv.className = 'status-message error';
+                    statusDiv.style.display = 'block';
+                    return;
+                }
+
+                fetch(`api/ext/request-portal/requests?token=${token}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(request)
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(err => { throw new Error(err.message || 'Request failed.'); });
+                    }
+                    return response;
+                })
+                .then(() => {
+                    statusDiv.textContent = 'Request submitted successfully!';
+                    statusDiv.className = 'status-message success';
+                    statusDiv.style.display = 'block';
+                    requestForm.reset();
+                })
+                .catch(error => {
+                    statusDiv.textContent = `Error: ${error.message}`;
+                    statusDiv.className = 'status-message error';
+                    statusDiv.style.display = 'block';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

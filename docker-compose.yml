@@ -2,54 +2,69 @@ version: '3.8'
 
 services:
   guacd:
-    image: guacamole/guacd
-    container_name: guac-request-portal-guacd
-    restart: unless-stopped
+    image: guacamole/guacd:1.5.3
+    restart: always
     networks:
-      - default
-    ports:
-      - "4822:4822"
+      - guac-net
 
   postgres:
-    image: postgres:15-alpine
-    container_name: guac-request-portal-postgres
-    restart: unless-stopped
-    networks:
-      - default
+    image: postgres:13
+    restart: always
     environment:
       POSTGRES_DB: guacamole_db
       POSTGRES_USER: guacamole_user
-      POSTGRES_PASSWORD: changeme
+      POSTGRES_PASSWORD: some_password
     volumes:
-      - ./initdb:/docker-entrypoint-initdb.d
-      - postgres-data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
+      - ./schema-postgres.sql:/docker-entrypoint-initdb.d/schema-postgres.sql
+    networks:
+      - guac-net
+
+  mysql:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_DATABASE: guacamole_db
+      MYSQL_USER: guacamole_user
+      MYSQL_PASSWORD: some_password
+      MYSQL_ROOT_PASSWORD: some_password
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./schema-mysql.sql:/docker-entrypoint-initdb.d/schema-mysql.sql
+    networks:
+      - guac-net
 
   guacamole:
-    image: guacamole/guacamole
-    container_name: guac-request-portal-guacamole
-    restart: unless-stopped
-    networks:
-      - default
-    ports:
-      - "8080:8080"
+    image: guacamole/guacamole:1.5.3
+    restart: always
+    links:
+      - guacd
+      - postgres
+      - mysql
     environment:
       GUACD_HOSTNAME: guacd
-      GUACAMOLE_HOME: /opt/guacamole
       POSTGRES_HOSTNAME: postgres
       POSTGRES_DATABASE: guacamole_db
       POSTGRES_USER: guacamole_user
-      POSTGRES_PASSWORD: changeme
-      # Optional: Enable debug logging for development
-      # LOG_LEVEL: "debug"
+      POSTGRES_PASSWORD: some_password
+      MYSQL_HOSTNAME: mysql
+      MYSQL_DATABASE: guacamole_db
+      MYSQL_USER: guacamole_user
+      MYSQL_PASSWORD: some_password
+      # Mount the extensions directory
+      EXTENSIONS_DIR: /opt/guacamole/extensions
     volumes:
-      - ./extensions:/opt/guacamole/extensions
-    depends_on:
-      - guacd
-      - postgres
-
-volumes:
-  postgres-data:
+      - ./target:/opt/guacamole/extensions # Mount the Maven target directory as extensions
+      - ./guacamole-home:/etc/guacamole # For guacamole.properties and other configs
+    ports:
+      - "8080:8080"
+    networks:
+      - guac-net
 
 networks:
-  default:
-    driver: bridge
+  guac-net:
+
+volumes:
+  postgres_data:
+  mysql_data:
+  guacamole-home:

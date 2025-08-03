@@ -1,0 +1,30 @@
+{
+  "request.title": "Request Access",
+  "request.heading": "Submit an Access Request",
+  "request.targetEnvironment": "Target Environment",
+  "request.reason": "Reason for Request",
+  "request.estimatedTime": "Estimated Time (Hours)",
+  "request.submit": "Submit Request",
+  "request.selectEnvironment": "-- Select Environment --",
+
+  "adminRequests.title": "Manage Access Requests",
+  "adminRequests.heading": "Access Requests",
+  "adminRequests.exportCsv": "Export to CSV",
+  "adminRequests.exportXlsx": "Export to XLSX",
+  "adminRequests.username": "Username",
+  "adminRequests.targetEnvironment": "Target Environment",
+  "adminRequests.reason": "Reason",
+  "adminRequests.estimatedTime": "Est. Time (Hours)",
+  "adminRequests.requestDate": "Request Date",
+  "adminRequests.status": "Status",
+  "adminRequests.actions": "Actions",
+
+  "adminEnvironments.title": "Manage Target Environments",
+  "adminEnvironments.heading": "Target Environments",
+  "adminEnvironments.name": "Name",
+  "adminEnvironments.description": "Description",
+  "adminEnvironments.actions": "Actions",
+  "adminEnvironments.save": "Save Environment",
+  "adminEnvironments.cancel": "Cancel Edit",
+  "adminEnvironments.existing": "Existing Environments"
+}

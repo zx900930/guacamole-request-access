@@ -1,0 +1,122 @@
+<!-- src/main/resources/html/admin-requests.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title data-i18n="adminRequests.title">Manage Access Requests</title>
+    <link rel="stylesheet" type="text/css" href="app/dist/guacamole.css">
+    <script type="text/javascript" src="app/dist/guacamole-common-js/modules/guacamole-common.js"></script>
+</head>
+<body class="guac-body">
+    <div class="login-dialog">
+        <h1 id="admin-requests-heading" data-i18n="adminRequests.heading">Manage Access Requests</h1>
+
+        <!-- Export buttons -->
+        <div class="form-group">
+            <button id="csv-export-button" class="button" data-i18n="adminRequests.exportCsv">Export as CSV</button>
+            <button id="xlsx-export-button" class="button" data-i18n="adminRequests.exportXlsx">Export as XLSX</button>
+        </div>
+
+        <hr>
+
+        <!-- Table for listing requests -->
+        <table class="list-table">
+            <thead>
+                <tr>
+                    <th data-i18n="adminRequests.username">Username</th>
+                    <th data-i18n="adminRequests.targetEnvironment">Target Environment</th>
+                    <th data-i18n="adminRequests.reason">Reason</th>
+                    <th data-i18n="adminRequests.estimatedTime">Est. Time (Hours)</th>
+                    <th data-i18n="adminRequests.requestDate">Request Date</th>
+                    <th data-i18n="adminRequests.status">Status</th>
+                    <th data-i18n="adminRequests.actions">Actions</th>
+                </tr>
+            </thead>
+            <tbody id="requests-table-body">
+                <!-- Requests will be dynamically loaded here -->
+            </tbody>
+        </table>
+        <div id="status-message" class="status-message" style="display: none;"></div>
+    </div>
+
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', function() {
+            const token = Guacamole.Authentication.getToken();
+            const apiUrl = 'api/ext/request-portal/requests';
+
+            const tableBody = document.getElementById('requests-table-body');
+            const statusDiv = document.getElementById('status-message');
+            const csvButton = document.getElementById('csv-export-button');
+            const xlsxButton = document.getElementById('xlsx-export-button');
+
+            function showStatus(message, isError = false) {
+                statusDiv.textContent = message;
+                statusDiv.className = isError ? 'status-message error' : 'status-message success';
+                statusDiv.style.display = 'block';
+            }
+
+            function loadRequests() {
+                fetch(`${apiUrl}?token=${token}`)
+                    .then(response => response.ok ? response.json() : Promise.reject('Failed to load requests.'))
+                    .then(requests => {
+                        tableBody.innerHTML = '';
+                        if (requests.length === 0) {
+                            const row = tableBody.insertRow();
+                            const cell = row.insertCell(0);
+                            cell.colSpan = 7;
+                            cell.textContent = 'No pending access requests.'; // data-i18n
+                            cell.style.textAlign = 'center';
+                        } else {
+                            requests.forEach(req => {
+                                const row = tableBody.insertRow();
+                                row.insertCell(0).textContent = req.username;
+                                row.insertCell(1).textContent = req.targetEnvironment;
+                                row.insertCell(2).textContent = req.reasonForRequest;
+                                row.insertCell(3).textContent = req.estimatedTime;
+                                row.insertCell(4).textContent = new Date(req.requestDate).toLocaleString();
+                                row.insertCell(5).textContent = req.status;
+
+                                const actionsCell = row.insertCell(6);
+                                if (req.status === 'PENDING') {
+                                    const approveButton = document.createElement('button');
+                                    approveButton.textContent = 'Approve'; // data-i18n
+                                    approveButton.className = 'button';
+                                    approveButton.onclick = () => updateRequestStatus(req.requestId, 'approve');
+
+                                    const denyButton = document.createElement('button');
+                                    denyButton.textContent = 'Deny'; // data-i18n
+                                    denyButton.className = 'button';
+                                    denyButton.onclick = () => updateRequestStatus(req.requestId, 'deny');
+
+                                    actionsCell.appendChild(approveButton);
+                                    actionsCell.appendChild(denyButton);
+                                }
+                            });
+                        }
+                    })
+                    .catch(err => showStatus(err, true));
+            }
+
+            function updateRequestStatus(id, action) {
+                fetch(`${apiUrl}/${id}/${action}?token=${token}`, { method: 'POST' })
+                    .then(response => {
+                        if (!response.ok) return Promise.reject(`Failed to ${action} request.`);
+                        showStatus(`Request ${action}d successfully.`);
+                        loadRequests();
+                    })
+                    .catch(err => showStatus(err, true));
+            }
+
+            csvButton.addEventListener('click', () => {
+                window.location.href = `${apiUrl}/export/csv?token=${token}`;
+            });
+
+            xlsxButton.addEventListener('click', () => {
+                window.location.href = `${apiUrl}/export/xlsx?token=${token}`;
+            });
+
+            // Initial load
+            loadRequests();
+        });
+    </script>
+</body>
+</html>

@@ -1,53 +1,54 @@
-# Guacamole Request Access Extension
+# Guacamole Request Portal Extension
 
-An Apache Guacamole extension that adds a user-facing portal to request and reserve access to remote desktop environments.
+A Guacamole extension for moderated access requests and reservations.
 
-## Features
+## Project Objective
 
-*   Users can request access to predefined environments.
-*   Administrators can approve or deny requests.
-*   Administrators can manage the list of available environments.
-*   Export request data to CSV or XLSX.
-
-## Building
-
-To build the extension, you will need:
-
-*   Java 1.8+
-*   Maven 3+
-
-Run the following command to build the extension:
-
-```
-mvn clean package
-```
-
-This will create a `.jar` file in the `target` directory. This is the extension file that you will deploy to Guacamole.
-
-## Deployment
-
-1.  Copy the `guacamole-request-access-1.5.3-jar-with-dependencies.jar` file from the `target` directory to the Guacamole `extensions` directory.
-2.  Restart Tomcat (or your servlet container).
+This extension provides a moderated request and reservation system for remote desktop access, with support for both PostgreSQL and MySQL databases.
 
 ## Development
 
-A `docker-compose.yml` file is provided for setting up a development environment. To use it, you will need:
+### Prerequisites
 
-*   Docker
-*   Docker Compose
+*   Java Development Kit (JDK) 8 or higher
+*   Apache Maven
+*   Docker and Docker Compose
 
-Run the following command to start the development environment:
+### Building the Project
 
+To build the `.jar` file, navigate to the project root directory and run:
+
+```bash
+mvn clean package
 ```
-docker-compose up -d
+
+This will generate `guac-request-portal-1.0.0.jar` in the `target/` directory.
+
+### Running with Docker Compose
+
+This project includes a `docker-compose.yml` file to set up a full Guacamole environment with PostgreSQL as the backend database. The extension will be automatically mounted into the Guacamole container.
+
+To start the environment:
+
+```bash
+docker compose up --build
 ```
 
-This will start the following services:
+To stop the environment:
 
-*   `guacd`
-*   `postgres`
-*   `guacamole`
+```bash
+docker compose down
+```
 
-The Guacamole web application will be available at `http://localhost:8080/guacamole`.
+### Accessing the Guacamole UI
 
-The extension is mounted as a volume, so you can make changes to the source code and see them reflected in the running application without having to rebuild and redeploy the extension.
+Once the Docker containers are running, you can access the Guacamole web interface at `http://localhost:8080/guacamole/`.
+
+## Core Functional Requirements (Planned)
+
+*   **Frontend Implementation:** Custom HTML pages for user requests and administrator management, following the `guacamole-branding-example` pattern.
+*   **User-Facing UI:** A custom HTML page for users to submit access requests with fields for "Target Environment", "Reason for Request", and "Estimated Time".
+*   **Administrator-Facing UI:** New settings tabs/pages for administrators to manage requests (Approve/Deny) and configure "Target Environments".
+*   **Database Support:** Compatibility with both MySQL and PostgreSQL, with separate schema files (`schema-mysql.sql`, `schema-postgres.sql`).
+*   **Data Export:** CSV and XLSX export functionality for access requests on the admin management page.
+*   **Internationalization (i18n):** UI text externalized using Guacamole's standard JSON translation files (`en.json`, `zh.json`).
